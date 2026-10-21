@@ -1,56 +1,65 @@
-# Qoder Sites React starter
+# LoveCan · 爱意罐头
 
-A React, TypeScript, Vite and Tailwind frontend with a bundled Shadcn component catalog. Vite produces static files in `dist/`. Server behavior belongs in the optional Qoder Sites Function, not a Node or framework server.
+把此刻的心意，封进一只罐子，交给时间。
 
-## Develop
+LoveCan 是一个写给"以后"的信匣。你写下名字、留一段话、录一段声音，选一个日子，然后按下一滴蜡——罐子就封上了。在选定的那一天之前，连你也打不开它。
 
-Use Node 22.12 or later in the 22.x series:
+## 它做什么
+
+- **写信**：给一个名字，写一段话，或者只留一句没说出口的话。
+- **留声音**：最长 90 秒的语音，和信一起封进去。
+- **选日子**：一天后、一周后、一个月后、半年后、一年后，或者自己挑一个精确到分钟的时刻。
+- **封罐**：按住蜡印，等它变凉。蜡一凉，这只罐子就不属于现在了。
+- **到期拆封**：日子到了，收件人用你给的链接打开罐子，读到信、听到声音。
+
+腰封上的一句话会按季节自动写好——春天是"等第一场春雨"，秋天是"等落叶铺满台阶"。你也可以自己改。
+
+## 它怎么守密
+
+信和声音在寄出之前就在浏览器里加密，服务端只保存密文。没有钥匙，它也不知道里面写了什么。到期之前，即使寄件人拿着管理链接，也读不到信和声音。
+
+到期之后，收件人可以用专属的钥匙链接打开罐子。打开过一次，罐子会留下"已开封"的印记，但信和声音会一直保留，收件人随时可以回来再读。
+
+如果想收回，寄件人可以用自己的管理链接在到期前撤销——撤销以后，信和声音一起消失，只剩一只空罐子。
+
+## 技术栈
+
+- **前端**：React 19 + TypeScript + Vite 8 + React Router
+- **样式**：Tailwind CSS 4 + 自定义纸感主题（宋体 / 楷体 / 手写体）
+- **加密**：Web Crypto API（AES-GCM + SHA-256），端到端加密在客户端完成
+- **后端**：Qoder Sites Function（Deno），本地开发用 mock 服务
+- **部署**：Qoder Sites，静态产物 + Edge Function
+
+## 本地开发
+
+需要 Node 22.x：
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Use the loopback URL printed by Vite. Edit `src/App.tsx`, `src/globals.css` and the title/description in `index.html`. Replace the sample page with the requested product before presenting a first meaningful preview. Import existing UI primitives from `@/components/ui/<component>` and compose them for the site's design. The neutral starter theme is a starting point, not the finished visual direction.
+Vite 会在 `127.0.0.1` 上启动开发服务器。编辑 `src/App.tsx`、`src/globals.css` 和 `index.html` 里的标题与描述。
 
-For production output:
+生产构建：
 
 ```sh
 npm run build
 npm run preview
 ```
 
-The build fixes `NODE_ENV=production` before loading Vite, independently of the terminal environment. It checks the frontend and bundled component types and emits `dist/index.html` and assets. `npm run preview` serves this output locally. Reuse passing checks while source is unchanged; no additional unit-test suite or browser QA is required by the template.
-
-## Optional Function
-
-The default page is entirely static and does not call a Function. For server behavior, adapt the public, credential-free example in `functions/handler.ts`. `functions/index.ts` is the Deno deployment entry point. With Deno installed, use a separate terminal:
+本地 Function（可选，用于端到端测试）：
 
 ```sh
-npm run check:function
 npm run dev:function
 ```
 
-The local service binds to `127.0.0.1:8000`; Vite development and built preview proxy `/functions/v1/app` to it, preserving the path. For example:
+## 部署
 
-```sh
-curl --fail 'http://127.0.0.1:5173/functions/v1/app?name=Visitor'
-```
+项目使用 Qoder Sites 发布。构建产物在 `dist/`，Function 在 `functions/`。
 
-Use Vite's actual port if it differs. The same frontend request after deployment is routed by Qoder Sites. Local proxy configuration is not production routing. Keep local-only servers and fixtures in `dev/`, outside both publication directories. The included Function has no dependencies; add self-contained runtime imports as required. Frontend npm dependencies are not automatically installed in Functions.
+线上地址：https://lovecan-3qpucev7hd9.qoder.zone
 
-## Publish with Qoder Sites
+## 致谢
 
-Open a local conversation in this project and follow the `sites-hosting` skill. Workspace registration is optional. Use the directory returned by `get_local_context` with:
-
-- `webDirectory: "dist"` after the build.
-- `spa: false` for the default single page; use `true` when adding client-side deep routes that need fallback.
-- `functionDirectory: "functions"` only if the application uses the Function. Omit it for static-only delivery.
-
-The Sites tools prepare artifacts and generate the publication descriptor; publish completed hosted work by default, unless the user explicitly requests a preview first or defers publication. Do not upload the project root, `node_modules`, `dev`, or source as the web artifact. A successful build or release does not prove an external integration works.
-
-For a database-backed React page, the installed `sites-building` Skill provides `assets/database-react/App.tsx` and a matching three-file database Function. Follow its `references/database.md` to connect the page, apply the reviewed schema and publish. These optional assets stay in the Skill rather than being copied into every static project.
-
-For database or Storage, follow the corresponding `sites-building` references and `sites-management` capability workflow. For AI, follow `sites-build-agent-app` and keep Cloud Agents access in the Function. Application credentials belong in server-side Sites Settings; frontend environment variables are public. This starter does not implement visitor login, database permissions, Cloud resource coordination or QCA sessions; add those only for the requested feature using the existing skills.
-
-See `PROVENANCE.md` and `vendor/` for source attribution and the preserved stylesheet license.
+字体来自 [Special Elite](https://fonts.google.com/specimen/Special+Elite)（打字机）和 [Caveat](https://fonts.google.com/specimen/Caveat)（手写），许可证见 `public/fonts/`。UI 组件目录基于 Shadcn 适配，许可证见 `vendor/`。
